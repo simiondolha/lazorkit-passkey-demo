@@ -1,5 +1,7 @@
 # LazorKit Passkey Demo
 
+> **Live Demo**: [lazorkit-passkey-demo-nine.vercel.app](https://lazorkit-passkey-demo-nine.vercel.app)
+
 A production-ready example demonstrating **passkey-based authentication** and **gasless transactions** on Solana using [LazorKit SDK](https://lazorkit.com).
 
 ## Features
@@ -22,7 +24,7 @@ A production-ready example demonstrating **passkey-based authentication** and **
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/lazorkit-passkey-demo.git
+git clone https://github.com/simiondolha/lazorkit-passkey-demo.git
 cd lazorkit-passkey-demo
 
 # Install dependencies
