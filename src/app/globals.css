@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --void: #030303;
+  --void-elevated: #0a0a0a;
+  --void-surface: #111111;
+  --void-border: #1a1a1a;
+  --void-border-glow: #2a2a2a;
+  --electric: #00F5D4;
+  --electric-dim: #00c4a8;
+  --electric-glow: rgba(0, 245, 212, 0.15);
+  --electric-intense: rgba(0, 245, 212, 0.4);
+  --signal-success: #00FF94;
+  --signal-warning: #FFD60A;
+  --signal-error: #FF4D6A;
+  --text-primary: #FAFAFA;
+  --text-secondary: #888888;
+  --text-tertiary: #555555;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-background: var(--void);
+  --color-foreground: var(--text-primary);
+  --font-sans: var(--font-display);
+  --font-mono: var(--font-mono);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--void-border-glow); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+::selection { background: var(--electric-intense); color: var(--void); }
+
+:focus-visible { outline: 2px solid var(--electric); outline-offset: 2px; }
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px var(--electric-glow); }
+  50% { box-shadow: 0 0 30px var(--electric-glow), 0 0 40px var(--electric-glow); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.animate-in { animation: fadeSlideUp 0.6s var(--ease-out-expo) forwards; opacity: 0; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
