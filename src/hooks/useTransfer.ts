@@ -4,6 +4,11 @@
  * Reusable hook for executing gasless token transfers.
  * Handles SOL and USDC transfers with built-in validation.
  *
+ * Performance optimizations:
+ * - Memoized callback with stable dependencies
+ * - Stable return object reference via useMemo
+ * - USDC_MINT created once at module level
+ *
  * Usage:
  * ```tsx
  * const { transfer, isLoading, error, signature } = useTransfer();
@@ -18,7 +23,7 @@
 "use client";
 
 import { useWallet } from "@lazorkit/wallet";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { PublicKey, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
   createTransferInstruction,
@@ -27,7 +32,7 @@ import {
 } from "@solana/spl-token";
 import { validateAddress, validateAmount, sanitizeError } from "@/lib/validation";
 
-// Devnet USDC mint
+// PERF: Create PublicKey once at module level - avoids recreation per render
 const USDC_MINT = new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU");
 
 export type TokenType = "SOL" | "USDC";
@@ -122,12 +127,15 @@ export function useTransfer() {
     setSignature(null);
   }, []);
 
-  return {
+  // PERF: Memoize return object to prevent consumer re-renders
+  const isReady = isConnected && smartWalletPubkey !== null;
+
+  return useMemo(() => ({
     transfer,
     isLoading,
     error,
     signature,
     reset,
-    isReady: isConnected && smartWalletPubkey !== null,
-  };
+    isReady,
+  }), [transfer, isLoading, error, signature, reset, isReady]);
 }
