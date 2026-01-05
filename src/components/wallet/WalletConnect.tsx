@@ -7,6 +7,7 @@
  * - Connect wallet with Face ID / Touch ID / Windows Hello
  * - Display connected wallet address with copy functionality
  * - Disconnect wallet and clear session
+ * - Session persistence with "Welcome back" for returning users
  *
  * The passkey is stored in the device's Secure Enclave,
  * private keys never leave the device.
@@ -16,11 +17,13 @@
 import { useWallet } from "@lazorkit/wallet";
 import { useState } from "react";
 import { formatAddress, sanitizeError } from "@/lib/validation";
+import { useSessionStatus } from "@/hooks/useSessionStatus";
 
 export function WalletConnect() {
   // Get wallet state and actions from LazorKit hook
   const { connect, disconnect, isConnected, isConnecting, smartWalletPubkey } =
     useWallet();
+  const { isReturningUser, clearSession } = useSessionStatus();
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -42,6 +45,7 @@ export function WalletConnect() {
   const handleDisconnect = async () => {
     try {
       await disconnect();
+      clearSession(); // Clear session metadata from localStorage
     } catch (err) {
       setError(sanitizeError(err));
     }
@@ -127,10 +131,12 @@ export function WalletConnect() {
         </div>
 
         <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2">
-          Passkey Authentication
+          {isReturningUser ? "Welcome Back!" : "Passkey Authentication"}
         </h3>
         <p className="text-sm text-[var(--text-secondary)] mb-6 max-w-xs mx-auto">
-          Sign in with Face ID, Touch ID, or Windows Hello. No seed phrases required.
+          {isReturningUser
+            ? "Your wallet is ready. Sign in to continue."
+            : "Sign in with Face ID, Touch ID, or Windows Hello. No seed phrases required."}
         </p>
 
         <button
@@ -146,6 +152,8 @@ export function WalletConnect() {
               </svg>
               Authenticating...
             </span>
+          ) : isReturningUser ? (
+            "Reconnect Wallet"
           ) : (
             "Connect with Passkey"
           )}
